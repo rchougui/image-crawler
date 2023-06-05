@@ -33,16 +33,20 @@ async function parseUrl(url: string, currentDepth: number) {
 
     // Extract all images
     const images: ImageResult[] = [];
+    const foundImages = new Set<string>();
     $('img').each((i, element) => {
       const imageUrl = $(element).attr('src');
       if (imageUrl) {
         // convert to absolute url
         const newImgUrl = new URL(imageUrl, url).href;
-        images.push({
-          imageUrl: newImgUrl,
-          depth: currentDepth,
-          sourceUrl: url,
-        });
+        if (!foundImages.has(newImgUrl)) {
+          foundImages.add(newImgUrl);
+          images.push({
+            imageUrl: newImgUrl,
+            depth: currentDepth,
+            sourceUrl: url,
+          });
+        }
       }
     });
 
